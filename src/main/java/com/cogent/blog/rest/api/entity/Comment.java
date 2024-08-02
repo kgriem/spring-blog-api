@@ -23,7 +23,7 @@ public class Comment {
     private String body;
 
     @ManyToOne(
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JoinColumn(
             name = "post_id",

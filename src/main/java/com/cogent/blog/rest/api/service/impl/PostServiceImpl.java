@@ -1,6 +1,7 @@
 package com.cogent.blog.rest.api.service.impl;
 
 import com.cogent.blog.rest.api.entity.Post;
+import com.cogent.blog.rest.api.exception.ResourceNotFoundException;
 import com.cogent.blog.rest.api.repository.PostRepository;
 import com.cogent.blog.rest.api.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,15 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post getPostById(Long id) {
-        return postRepository.findById(id).orElseThrow(()-> new RuntimeException("post not found by id "+id));
+        return postRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("post", "postId", id));
     }
 
     @Override
     public Post updatePost(Long id, Post updatePost) {
-        Post post = postRepository.findById(id).orElseThrow(()->new RuntimeException("post not found with id: "+id));
-        post.setComments(updatePost.getComments());
+        Post post = postRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("post", "postId", id));
         post.setTitle(updatePost.getTitle());
         post.setContent(updatePost.getContent());
+        post.setDescription(updatePost.getDescription());
         return postRepository.save(post);
     }
 

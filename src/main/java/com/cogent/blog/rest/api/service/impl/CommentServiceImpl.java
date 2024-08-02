@@ -2,6 +2,7 @@ package com.cogent.blog.rest.api.service.impl;
 
 import com.cogent.blog.rest.api.entity.Comment;
 import com.cogent.blog.rest.api.entity.Post;
+import com.cogent.blog.rest.api.exception.ResourceNotFoundException;
 import com.cogent.blog.rest.api.repository.CommentRepository;
 import com.cogent.blog.rest.api.repository.PostRepository;
 import com.cogent.blog.rest.api.service.CommentService;
@@ -20,7 +21,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment createComment(Long postId, Comment comment) {
-        Post post = postRepository.findById(postId).orElseThrow(()->new RuntimeException("resource not found"));
+        Post post = postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("post", "postId", postId));
         comment.setPost(post);
         return commentRepository.save(comment);
     }
@@ -35,12 +36,13 @@ public class CommentServiceImpl implements CommentService {
             }
         }
         return comments;
+
     }
 
     @Override
     public Comment getCommentById(Long postId, Long id) {
-        Post post = postRepository.findById(postId).orElseThrow(()->new RuntimeException("resource not found"));
-        Comment comment = commentRepository.findById(id).orElseThrow(()->new RuntimeException("could not find comment by id: "+id));
+        Post post = postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("post", "postId", postId));
+        Comment comment = commentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("comment", "commentId", id));
         if(!post.getId().equals(postId)){
             throw new RuntimeException("post ids do not match");
         }
@@ -49,8 +51,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment updateComment(Long postId, Long id, Comment updateComment) {
-        Comment comment = commentRepository.findById(id).orElseThrow(()->new RuntimeException("could not find comment by id: "+id));
-        Post post = postRepository.findById(postId).orElseThrow(()->new RuntimeException("not found"));
+        Comment comment = commentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("comment", "commentId", id));
+        Post post = postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("post", "postId", postId));
         if(!post.getId().equals(postId)){
             throw new RuntimeException("post ids do not match");
         }
@@ -63,8 +65,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteComment(Long postId, Long id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(()->new RuntimeException("could not find comment by id: "+id));
-        Post post = postRepository.findById(postId).orElseThrow(()->new RuntimeException("not found"));
+        Comment comment = commentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("comment", "commentId", id));
+        Post post = postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("post", "postId", postId));
         if(!post.getId().equals(postId)){
             throw new RuntimeException("post ids do not match");
         }

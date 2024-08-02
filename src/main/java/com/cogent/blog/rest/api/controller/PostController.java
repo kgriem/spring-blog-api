@@ -2,6 +2,7 @@ package com.cogent.blog.rest.api.controller;
 
 import com.cogent.blog.rest.api.entity.Post;
 import com.cogent.blog.rest.api.service.PostService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class PostController {
     private PostService postService;
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post){
+    public ResponseEntity<Post> createPost(@Valid @RequestBody Post post){
         Post data = postService.createPost(post);
         return new ResponseEntity<>(data, HttpStatus.CREATED);
     }
@@ -34,7 +35,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post post){
+    public ResponseEntity<Post> updatePost(@PathVariable Long id, @Valid @RequestBody Post post){
         Post data = postService.updatePost(id, post);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
