@@ -3,6 +3,11 @@ server:
 
 
 spring:
+  #security:
+    #user:
+   #   name: admin
+    #  password: admin
+     # roles: ADMIN
   datasource:
     url: jdbc:mysql://localhost:3306/blogdb
     username: root
