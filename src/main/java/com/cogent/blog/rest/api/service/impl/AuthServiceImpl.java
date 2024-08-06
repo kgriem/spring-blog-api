@@ -6,6 +6,7 @@ import com.cogent.blog.rest.api.payload.LoginDto;
 import com.cogent.blog.rest.api.payload.RegisterDto;
 import com.cogent.blog.rest.api.repository.RoleRepository;
 import com.cogent.blog.rest.api.repository.UserRespository;
+import com.cogent.blog.rest.api.security.JwtTokenProvider;
 import com.cogent.blog.rest.api.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,13 +34,17 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @Override
     public String login(LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsernameOrEmail(), loginDto.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "user logged in successfully";
+        String token = jwtTokenProvider.generateToken(authentication);
+        return token;
     }
 
     @Override
